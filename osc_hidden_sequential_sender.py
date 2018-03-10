@@ -111,8 +111,8 @@ def main_thread():
     projector_osc_client_sender = init_osc_sender(config.projector_sender_ip,config.projector_sender_port)
 
     pd_osc_client_sender = init_osc_sender(config.pd_sender_ip,config.pd_sender_port)
-    
-    # roomba_osc_client_sender = init_osc_sender(config.roomba_sender_ip,config.roomba_sender_port)
+
+    roomba_osc_client_sender = init_osc_sender(config.roomba_sender_ip,config.roomba_sender_port)
 
     index = 0
     while True:
@@ -122,7 +122,7 @@ def main_thread():
 
         broadcast_parameter(projector_osc_client_sender, x, y, z, config.interaction)
         broadcast_parameter(pd_osc_client_sender, x, y, z, config.interaction)
-        # broadcast_parameter(roomba_osc_client_sender, x, y, z, config.interaction)
+        broadcast_parameter(roomba_osc_client_sender, x, y, z, config.interaction)
 
         # # 人が近くにいるときは、遠くに行って、離れたらあまり動かないように
         if(config.interaction > config.interction_threshold):
