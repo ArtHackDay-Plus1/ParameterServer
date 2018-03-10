@@ -93,6 +93,7 @@ if __name__ == "__main__":
     index = 0
     while True:
         task(osc_client_sender, x_list[index], y_list[index])
+        
         time.sleep(0.05)
         index += 1
         if(index >= config.sample_num): index = 0
