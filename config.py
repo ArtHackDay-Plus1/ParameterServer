@@ -5,9 +5,9 @@ receiver_ip = "127.0.0.1"
 
 # "192.168.2.11"  cannot used
 
-# projector
-projector_sender_ip = "192.168.2.14"
-projector_sender_port = 8014
+# projector + Kinect
+macmini_sender_ip = "192.168.2.14"
+macmini_sender_port = 8014
 
 # PureData
 pd_sender_ip = "192.168.2.12"

@@ -108,7 +108,7 @@ def get_distance(x1, y1, x2, y2):
 def main_thread():
 
     # OSC周りの初期化
-    projector_osc_client_sender = init_osc_sender(config.projector_sender_ip,config.projector_sender_port)
+    macmini_osc_client_sender = init_osc_sender(config.macmini_sender_ip,config.macmini_sender_port)
 
     pd_osc_client_sender = init_osc_sender(config.pd_sender_ip,config.pd_sender_port)
 
@@ -120,7 +120,7 @@ def main_thread():
         y = y_list[index]
         z = randint(0,10)
 
-        broadcast_parameter(projector_osc_client_sender, x, y, z, config.interaction)
+        broadcast_parameter(macmini_osc_client_sender, x, y, z, config.interaction)
         broadcast_parameter(pd_osc_client_sender, x, y, z, config.interaction)
         broadcast_parameter(roomba_osc_client_sender, x, y, z, config.interaction)
 
