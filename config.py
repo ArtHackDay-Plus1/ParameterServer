@@ -28,5 +28,5 @@ x_max = 1200
 y_max = 2700
 
 # カニが逃げる半径
-prohibited_area_radius = 300
+prohibited_area_radius = 700
 interction_threshold = 100
