@@ -24,8 +24,14 @@ pattern_num = 100
 sample_num = 20000
 
 # roombaのframeサイズ
-x_max = 1200
-y_max = 2700
+frame_x_max = 1200
+frame_y_max = 2700
+
+frame_margin = 300
+
+x_max_scale = frame_x_max - frame_margin*2
+y_max_scale = frame_y_max - frame_margin*2
+
 
 # カニが逃げる半径
 prohibited_area_radius = 700
