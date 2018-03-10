@@ -1,12 +1,21 @@
-sender_port = 8012
 receiver_port = 8008
-
 interaction = 0
-
-sender_ip = "192.168.2.106"
-# sender_ip = "192.168.2.106"
-
 receiver_ip = "127.0.0.1"
+
+
+# "192.168.2.11"  cannot used
+
+# projector + Kinect
+macmini_sender_ip = "192.168.2.14"
+macmini_sender_port = 8014
+
+# PureData
+pd_sender_ip = "192.168.2.12"
+pd_sender_port = 8012
+
+# roomba
+roomba_sender_ip = "192.168.2.13"
+roomba_sender_port = 8013
 
 # 多いほど複雑な動きが生成
 pattern_num = 100

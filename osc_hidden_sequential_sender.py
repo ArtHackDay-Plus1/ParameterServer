@@ -58,15 +58,11 @@ def init_osc_receiver():
     server.serve_forever()
 
 # OSCのSender初期化
-def init_osc_sender():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--sender_ip", default=config.sender_ip, help="The ip of th OSC Sender")
-    parser.add_argument("--sender_port", type=int, default=config.sender_port, help="The port the OSC sender is listening on")
-    args = parser.parse_args()
-    osc_client = udp_client.UDPClient(args.sender_ip, args.sender_port)
+def init_osc_sender(ip,port):
+    osc_client = udp_client.UDPClient(ip,port)
 
     # 設定のログ出し
-    print("[Sender] sender_ip:{}, sender_port:{}, address:/data".format(args.sender_ip, args.sender_port))
+    print("[Sender] sender_ip:{}, sender_port:{}, address:/data".format(ip,port))
     return osc_client
 
 # パーリンノイズの生成
@@ -83,29 +79,27 @@ def get_param(msg,arg):
     input_arg = randint(0,100)
     msg.add_arg(int(input_arg))
 
-def broadcast_parameter(osc_client, x, y):
-    msg = osc_message_builder.OscMessageBuilder(address="/data")
+def broadcast_parameter(osc_client, x, y, z, interaction):
+    try:
+        msg = osc_message_builder.OscMessageBuilder(address="/data")
 
-    # 更新時間を送信
-    update_time = str(time.asctime().split(" ")[3])
-    msg.add_arg(update_time)
-    print("update_time: {}".format(update_time))
+        # 更新時間を送信
+        update_time = str(time.asctime().split(" ")[3])
+        msg.add_arg(update_time)
+        print("update_time: {}".format(update_time))
 
-    # get_param(msg,"X")
-    # get_param(msg,"Y")
-    msg.add_arg(int(x))
-    msg.add_arg(int(y))
+        msg.add_arg(int(x))
+        msg.add_arg(int(y))
+        msg.add_arg(int(z))
+        msg.add_arg(int(interaction))
 
-    z = randint(0,100)
-    interaction = randint(0,100)
+        print("send message: x[{0}],y[{1}],z[{2}],interaction[{3}]".format(x,y,z,interaction))
 
-    msg.add_arg(int(z))
-    msg.add_arg(int(interaction))
+        msg = msg.build()
+        osc_client.send(msg)
 
-    print("send message: x[{0}],y[{1}],z[{2}],interaction[{3}]".format(x,y,z,interaction))
-
-    msg = msg.build()
-    osc_client.send(msg)
+    except OSError:
+        print("[OS Error] OSC disconnected")
 
 def get_distance(x1, y1, x2, y2):
     d = math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
@@ -114,13 +108,21 @@ def get_distance(x1, y1, x2, y2):
 def main_thread():
 
     # OSC周りの初期化
-    osc_client_sender = init_osc_sender()
+    macmini_osc_client_sender = init_osc_sender(config.macmini_sender_ip,config.macmini_sender_port)
+
+    pd_osc_client_sender = init_osc_sender(config.pd_sender_ip,config.pd_sender_port)
+
+    roomba_osc_client_sender = init_osc_sender(config.roomba_sender_ip,config.roomba_sender_port)
 
     index = 0
     while True:
         x = x_list[index]
         y = y_list[index]
-        broadcast_parameter(osc_client_sender, x, y)
+        z = randint(0,10)
+
+        broadcast_parameter(macmini_osc_client_sender, x, y, z, config.interaction)
+        broadcast_parameter(pd_osc_client_sender, x, y, z, config.interaction)
+        broadcast_parameter(roomba_osc_client_sender, x, y, z, config.interaction)
 
         # # 人が近くにいるときは、遠くに行って、離れたらあまり動かないように
         if(config.interaction > config.interction_threshold):
