@@ -14,7 +14,7 @@ import sys
 # モジュール変数の定義
 import config
 
-# OSC関係のため
+# OSC送信のため
 import argparse
 from pythonosc import osc_message_builder
 from pythonosc import udp_client
@@ -35,11 +35,26 @@ def init_osc():
     print("ip:127.0.0.1, port:" + str(config.port_num) + ", address:/data")
     return osc_client
 
+# Parameterの取得
+def get_param(arg):
+    print("type {}:".format(arg))
+    input_arg = input()
+    return input_arg
+
 def task(osc_client):
-  print("type int:")
-  input_arg = input()
+
+  input_arg_x = get_param("X")
+  input_arg_y = get_param("Y")
+  input_arg_z = get_param("Z")
+  input_arg_interction = get_param("interction")
+
   msg = osc_message_builder.OscMessageBuilder(address="/data")
-  msg.add_arg(input_arg)
+
+  msg.add_arg(input_arg_x)
+  msg.add_arg(input_arg_y)
+  msg.add_arg(input_arg_z)
+  msg.add_arg(input_arg_interction)
+
   msg = msg.build()
   osc_client.send(msg)
 
@@ -53,3 +68,4 @@ if __name__ == "__main__":
 
   while True:
     task(osc_client)
+    time.sleep(2)
