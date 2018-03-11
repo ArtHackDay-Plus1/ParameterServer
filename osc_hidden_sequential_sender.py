@@ -15,6 +15,7 @@ import sys
 
 # モジュール変数の定義
 import config
+import received_data
 
 # OSC送信のため
 import argparse
@@ -34,9 +35,11 @@ def handler(signal, frame):
         sys.exit(0)
 
 # Receive時の処理 (data/ 以降に一つのデータの際(引数一つ)であればok)
-def print_handler(_data_path, arg):
-    print("receive interaction : {0}".format((arg)))
-    config.interaction = arg
+def print_handler(_data_path, nearest_x, nearest_depth, num_of_people):
+    print("receive : {0},{1},{2}".format(nearest_x, nearest_depth, num_of_people))
+    received_data.nearest_x = nearest_x
+    received_data.nearest_depth = nearest_depth
+    received_data.num_of_people = num_of_people
 
 # OSCのReceiver初期化
 def receiver_thread():
@@ -105,6 +108,11 @@ def get_distance(x1, y1, x2, y2):
     d = math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
     return d
 
+
+gef calculate_interaction():
+    interaction_value = received_data.
+    return interaction_value
+
 def main_thread():
 
     # OSC周りの初期化
@@ -118,16 +126,22 @@ def main_thread():
     while True:
         x = x_list[index]
         y = y_list[index]
-        z = randint(0,10)
+        z = randint(0,config.z_max)
 
-        broadcast_parameter(macmini_osc_client_sender, x, y, z, config.interaction)
-        broadcast_parameter(pd_osc_client_sender, x, y, z, config.interaction)
-        broadcast_parameter(roomba_osc_client_sender, x, y, z, config.interaction)
+        # 人が多い場合はinteraction度合いをあげる
+        interaction = received_data.num_of_people
+        broadcast_parameter(macmini_osc_client_sender, x, y, z, interaction)
+        broadcast_parameter(pd_osc_client_sender, x, y, z, interaction)
+        broadcast_parameter(roomba_osc_client_sender, x, y, z, interaction)
 
         # # 人が近くにいるときは、遠くに行って、離れたらあまり動かないように
-        if(config.interaction > config.interction_threshold):
+        if(config.interaction > config.interaction_threshold):
             # 人に近い場合は素早く動く
-            if(get_distance(x, y, config.frame_x_max/2, config.frame_y_max/2) < config.prohibited_area_radius):
+            # 一番展示に近い人のy方向の値をmapで取得
+            target_x = (received_data.nearest_x/received_data.nearest_x_max) * config.frame_y_max
+            # 一番展示に近い人の展示までの距離をmapで取得
+            target_y = config.frame_x_max received_data.nearest_depth
+            if(get_distance(x, y, target_x, target_y) < config.prohibited_area_radius):
                 time.sleep(0.01)
             # 離れたらあんまり動かない
             else:

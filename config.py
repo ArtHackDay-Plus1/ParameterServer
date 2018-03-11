@@ -1,5 +1,4 @@
 receiver_port = 8008
-interaction = 0
 receiver_ip = "127.0.0.1"
 
 
@@ -32,7 +31,9 @@ frame_margin = 300
 x_max_scale = frame_x_max - frame_margin*2
 y_max_scale = frame_y_max - frame_margin*2
 
-
 # カニが逃げる半径
-prohibited_area_radius = 700
-interction_threshold = 100
+prohibited_area_radius = 1000
+interaction_threshold = 100
+
+# 磁石動かすサーボモーターの高さの最大値
+z_max = 250
