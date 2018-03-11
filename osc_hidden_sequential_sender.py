@@ -89,7 +89,7 @@ def broadcast_parameter(osc_client, x, y, z, interaction):
         # 更新時間を送信
         update_time = str(time.asctime().split(" ")[3])
         msg.add_arg(update_time)
-        print("update_time: {}".format(update_time))
+        # print("update_time: {}".format(update_time))
 
         msg.add_arg(int(x))
         msg.add_arg(int(y))
@@ -108,10 +108,9 @@ def get_distance(x1, y1, x2, y2):
     d = math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
     return d
 
-
-gef calculate_interaction():
-    interaction_value = received_data.
-    return interaction_value
+# def calculate_interaction():
+#     interaction_value = received_data.
+#     return interaction_value
 
 def main_thread():
 
@@ -135,20 +134,32 @@ def main_thread():
         broadcast_parameter(roomba_osc_client_sender, x, y, z, interaction)
 
         # # 人が近くにいるときは、遠くに行って、離れたらあまり動かないように
-        if(config.interaction > config.interaction_threshold):
-            # 人に近い場合は素早く動く
-            # 一番展示に近い人のy方向の値をmapで取得
-            target_x = (received_data.nearest_x/received_data.nearest_x_max) * config.frame_y_max
-            # 一番展示に近い人の展示までの距離をmapで取得
-            target_y = config.frame_x_max received_data.nearest_depth
-            if(get_distance(x, y, target_x, target_y) < config.prohibited_area_radius):
-                time.sleep(0.01)
-            # 離れたらあんまり動かない
-            else:
-                time.sleep(0.5)
-        # 普段は普通通り動く
-        else:
+        # if(interaction >= config.interaction_threshold):
+        #
+        # # 普段は普通通り動く
+        # else:
+        #     print("[DEFAULT]")
+        #     time.sleep(0.05)
+
+        # 人に近い場合は素早く動く
+        # 一番展示に近い人のy方向の値をmapで取得
+        target_x = received_data.nearest_x
+        # 一番展示に近い人の展示までの距離をmapで取得
+        target_y = received_data.nearest_depth
+
+        # if(get_distance(x, y, target_x, -target_y) < config.prohibited_area_radius):
+        #     print("NEAR")
+        #     if(interaction >= config.interaction_threshold):
+        #         time.sleep(0.001)
+        #     else:
+        #         time.sleep(0.05)
+
+        if(interaction < 0):
+            time.sleep(0.01/(-interaction))
+        elif(interaction < 2):
             time.sleep(0.05)
+        else:
+            time.sleep(5)
 
         index += 1
         if(index >= config.sample_num): index = 0
