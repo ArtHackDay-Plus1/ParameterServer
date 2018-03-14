@@ -40,7 +40,9 @@ def get_param(msg,arg):
 
 def task(osc_client):
   msg = osc_message_builder.OscMessageBuilder(address="/data")
-  get_param(msg,"interaction")
+  get_param(msg,"nearest_x")
+  get_param(msg,"nearest_depth")
+  get_param(msg,"num_of_people")
   msg = msg.build()
   osc_client.send(msg)
 

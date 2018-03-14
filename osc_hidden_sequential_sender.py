@@ -15,6 +15,7 @@ import sys
 
 # モジュール変数の定義
 import config
+import received_data
 
 # OSC送信のため
 import argparse
@@ -34,9 +35,11 @@ def handler(signal, frame):
         sys.exit(0)
 
 # Receive時の処理 (data/ 以降に一つのデータの際(引数一つ)であればok)
-def print_handler(_data_path, arg):
-    print("receive interaction : {0}".format((arg)))
-    config.interaction = arg
+def print_handler(_data_path, nearest_x, nearest_depth, num_of_people):
+    print("receive : {0},{1},{2}".format(nearest_x, nearest_depth, num_of_people))
+    received_data.nearest_x = nearest_x
+    received_data.nearest_depth = nearest_depth
+    received_data.num_of_people = num_of_people
 
 # OSCのReceiver初期化
 def receiver_thread():
@@ -69,8 +72,8 @@ def init_osc_sender(ip,port):
 def generate_perlin_noise():
 
     arg = config.pattern_num/config.sample_num
-    x_list = [(1+noise.pnoise1(arg*i,octaves=1,base=0))/2*config.x_max for i in range(config.sample_num)]
-    y_list = [(1+noise.pnoise1(arg*i,octaves=1,persistence=0.5,base=1))/2*config.y_max for i in range(config.sample_num)]
+    x_list = [(1+noise.pnoise1(arg*i,octaves=1,base=0))/2*config.x_max_scale+config.frame_margin for i in range(config.sample_num)]
+    y_list = [(1+noise.pnoise1(arg*i,octaves=1,persistence=0.5,base=1))/2*config.y_max_scale+config.frame_margin for i in range(config.sample_num)]
 
     return x_list,y_list;
 
@@ -86,7 +89,7 @@ def broadcast_parameter(osc_client, x, y, z, interaction):
         # 更新時間を送信
         update_time = str(time.asctime().split(" ")[3])
         msg.add_arg(update_time)
-        print("update_time: {}".format(update_time))
+        # print("update_time: {}".format(update_time))
 
         msg.add_arg(int(x))
         msg.add_arg(int(y))
@@ -105,6 +108,10 @@ def get_distance(x1, y1, x2, y2):
     d = math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
     return d
 
+# def calculate_interaction():
+#     interaction_value = received_data.
+#     return interaction_value
+
 def main_thread():
 
     # OSC周りの初期化
@@ -118,23 +125,41 @@ def main_thread():
     while True:
         x = x_list[index]
         y = y_list[index]
-        z = randint(0,10)
+        z = randint(0,config.z_max)
 
-        broadcast_parameter(macmini_osc_client_sender, x, y, z, config.interaction)
-        broadcast_parameter(pd_osc_client_sender, x, y, z, config.interaction)
-        broadcast_parameter(roomba_osc_client_sender, x, y, z, config.interaction)
+        # 人が多い場合はinteraction度合いをあげる
+        interaction = received_data.num_of_people
+        broadcast_parameter(macmini_osc_client_sender, x, y, z, interaction)
+        broadcast_parameter(pd_osc_client_sender, x, y, z, interaction)
+        broadcast_parameter(roomba_osc_client_sender, x, y, z, interaction)
 
         # # 人が近くにいるときは、遠くに行って、離れたらあまり動かないように
-        if(config.interaction > config.interction_threshold):
-            # 人に近い場合は素早く動く
-            if(get_distance(x, y, config.x_max/2, 0) < config.prohibited_area_radius):
-                time.sleep(0.001)
-            # 離れたらあんまり動かない
-            else:
-                time.sleep(2)
-        # 普段は普通通り動く
-        else:
+        # if(interaction >= config.interaction_threshold):
+        #
+        # # 普段は普通通り動く
+        # else:
+        #     print("[DEFAULT]")
+        #     time.sleep(0.05)
+
+        # 人に近い場合は素早く動く
+        # 一番展示に近い人のy方向の値をmapで取得
+        target_x = received_data.nearest_x
+        # 一番展示に近い人の展示までの距離をmapで取得
+        target_y = received_data.nearest_depth
+
+        # if(get_distance(x, y, target_x, -target_y) < config.prohibited_area_radius):
+        #     print("NEAR")
+        #     if(interaction >= config.interaction_threshold):
+        #         time.sleep(0.001)
+        #     else:
+        #         time.sleep(0.05)
+
+        if(interaction < 0):
+            time.sleep(0.01/(-interaction))
+        elif(interaction < 2):
             time.sleep(0.05)
+        else:
+            time.sleep(5)
 
         index += 1
         if(index >= config.sample_num): index = 0
