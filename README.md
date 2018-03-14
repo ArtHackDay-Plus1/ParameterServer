@@ -5,19 +5,31 @@ This is a server program that performs allreduce and scatter of data with other 
 
 ```
 ├── __pycache__
-│   └── config.cpython-34.pyc
+│   ├── config.cpython-34.pyc
+│   └── received_data.cpython-34.pyc
 ├── config.py
+├── demo
+│   ├── __pycache__
+│   │   └── config.cpython-34.pyc
+│   ├── config.py
+│   └── kinect_dummy.py
 ├── parameter_server.py
+├── received_data.py
 ├── sandbox
-│   ├── __pycache__
-│   │   └── config.cpython-34.pyc
-│   ├── config.py
-│   ├── receiver_sample.py
-│   └── sender_sample.py
+│   ├── __pycache__
+│   │   └── config.cpython-34.pyc
+│   ├── config.py
+│   ├── osc_sequential_sender.py
+│   ├── parameter_server.py
+│   ├── receiver_sample.py
+│   └── sender_sample.py
 └── time_series_data_generator
     ├── csv_to_df_generator.py
-    └── data
-        └── sample.csv
+    ├── data
+    │   ├── perlin.csv
+    │   └── sample.csv
+    ├── log_plotter.py
+    └── perlin_noise_generator.py
 ```
 
 ## requirement
