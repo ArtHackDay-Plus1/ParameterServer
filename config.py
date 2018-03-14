@@ -10,7 +10,8 @@ macmini_sender_ip = "127.0.0.1" # for dummy
 macmini_sender_port = 8015
 
 # projector + Kinect
-macmini_sender_ip = "192.168.2.17"
+macmini_sender_ip = "127.0.0.1"
+# macmini_sender_ip = "192.168.2.17"
 macmini_sender_port = 8017
 
 # PureData

@@ -1,9 +1,7 @@
-import pandas as pd
-import matplotlib.pyplot as plt
+# Motion生成のため
 import time
 import noise
 from numpy.random import *
-import csv
 
 # 更新時間管理など
 import datetime
@@ -25,8 +23,11 @@ from pythonosc import udp_client
 # OSC受信のため
 from pythonosc import dispatcher
 from pythonosc import osc_server
+
+# 受信は別スレッドで行うため
 import threading
 
+# Kinectで取得したデータでインタラクションの計算を行うため
 import math
 
 # Ctrl+Cで終了時の処理
@@ -157,7 +158,7 @@ def main_thread():
         if(interaction < 0):
             time.sleep(0.01/(-interaction))
         elif(interaction < 2):
-            time.sleep(0.05)
+            time.sleep(0.01)
         else:
             time.sleep(5)
 
