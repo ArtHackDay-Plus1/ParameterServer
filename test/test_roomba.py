@@ -7,7 +7,6 @@ import argparse
 from pythonosc import dispatcher
 from pythonosc import osc_server
 
-
 def print_handler(_data_path, args):
     print("input : {0}".format(args))
 

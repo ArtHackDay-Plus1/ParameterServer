@@ -34,28 +34,17 @@ def init_osc_sender():
     print("[Sender] sender_ip:{}, sender_port:{}, address:/data".format(args.kinect_sender_ip, args.kinect_sender_port))
     return osc_client
 
-# Parameterの取得とmsgに突っ込む
-# def append_param(msg,arg):
-#     print("type {}:".format(arg))
-#     input_arg = input()
-#     msg.add_arg(int(input_arg))
-#     return input_arg
-
 def task(osc_client, index):
   msg = osc_message_builder.OscMessageBuilder(address="/data")
-  # _x = df['x'][index].astype("int")
-  # _y = df['y'][index].astype("int")
   _x = int(df.x.values[index])
   _y = int(df.y.values[index])
-  # _y = int(df['y'][index].values)
-
-  print(type(_x))
 
   msg.add_arg(int(_x)) # nearest_x
   msg.add_arg(int(_y)) # nearest_depth
   msg.add_arg(int(0)) # num_of_people
   msg = msg.build()
   osc_client.send(msg)
+  print("[Kinect Sender] x:{}, y:{}".format(_x, _y))
 
 if __name__ == "__main__":
 
@@ -72,7 +61,7 @@ if __name__ == "__main__":
   while True:
 
     task(osc_client_sender, index)
-    time.sleep(2)
+    time.sleep(0.01)
     index += 1
 
     if index >= len(df):
