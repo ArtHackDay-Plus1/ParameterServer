@@ -39,8 +39,13 @@ This is a server program that performs allreduce and scatter of data with other 
 #### Python Libraries
 - noise 1.2.2
 - numpy 1.14.1
-- pyparsing 2.2.0
 - python-osc 1.6.4
+
+you can install following command.
+
+```bash
+pip install --require requirements.txt
+```
 
 #### Python Libraries(unconfirmed)
 - portend 2.2
@@ -110,6 +115,7 @@ you have to fix ip address and set port num
 $ cd workspace
 $ git clone https://github.com/ArtHackDay-Plus1/ParameterServer
 $ cd ParameterServer
+$ pip install --require requirements.txt
 $ python parameter_server.py
 [Sender] sender_ip:127.0.0.1, sender_port:8017, address:/data
 [Sender] sender_ip:192.168.2.12, sender_port:8012, address:/data
