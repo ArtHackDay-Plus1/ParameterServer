@@ -120,12 +120,12 @@ def get_farthest_xy(target_x):
 
 # 任意の点(x,y)最近傍の 生成済み経路の点のindexを取得
 def calculate_nearest_index(x, y):
-    index = -1
+    nearest_index = -1
     min_distance = 10000
     for i in range(config.sample_num):
         if get_distance(x, y, x_list[i], y_list[i]) < min_distance :
             min_distance = get_distance(x, y, x_list[i], y_list[i])
-            index = i
+            nearest_index = i
     return nearest_index
 
 def main_thread():
