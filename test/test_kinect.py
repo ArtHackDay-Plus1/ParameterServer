@@ -28,7 +28,7 @@ def init_osc_sender():
     parser.add_argument("--kinect_sender_ip", default=test_config.kinect_sender_ip, help="The ip of th OSC Sender")
     parser.add_argument("--kinect_sender_port", type=int, default=test_config.kinect_sender_port, help="The port the OSC sender is listening on")
     args = parser.parse_args()
-    osc_client = udp_client.UDPClient(args.kinect_sender_port, args.kinect_sender_port)
+    osc_client = udp_client.UDPClient(args.kinect_sender_ip, args.kinect_sender_port)
 
     # 設定のログ出し
     print("[Sender] sender_ip:{}, sender_port:{}, address:/data".format(args.kinect_sender_ip, args.kinect_sender_port))
@@ -45,9 +45,12 @@ def task(osc_client, index):
   msg = osc_message_builder.OscMessageBuilder(address="/data")
   # _x = df['x'][index].astype("int")
   # _y = df['y'][index].astype("int")
-  _x = int(df['x'][index].astype("int"))
-  _y = int(df['y'][index].astype("int"))
-  
+  _x = int(df.x.values[index])
+  _y = int(df.y.values[index])
+  # _y = int(df['y'][index].values)
+
+  print(type(_x))
+
   msg.add_arg(int(_x)) # nearest_x
   msg.add_arg(int(_y)) # nearest_depth
   msg.add_arg(int(0)) # num_of_people
@@ -64,8 +67,7 @@ if __name__ == "__main__":
 
   # テストデータのロード
   df = pd.read_csv('test_kinect.csv')
-  print(df)
-  print(df.columns)
+
   index = 0
   while True:
 
