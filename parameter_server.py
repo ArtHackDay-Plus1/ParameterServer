@@ -134,33 +134,27 @@ def main_thread():
         broadcast_parameter(pd_osc_client_sender, x, y, z, interaction)
         broadcast_parameter(roomba_osc_client_sender, x, y, z, interaction)
 
-        # # 人が近くにいるときは、遠くに行って、離れたらあまり動かないように
-        # if(interaction >= config.interaction_threshold):
-        #
-        # # 普段は普通通り動く
-        # else:
-        #     print("[DEFAULT]")
-        #     time.sleep(0.05)
-
         # 人に近い場合は素早く動く
         # 一番展示に近い人のy方向の値をmapで取得
         target_x = received_data.nearest_x
         # 一番展示に近い人の展示までの距離をmapで取得
         target_y = received_data.nearest_depth
 
-        # if(get_distance(x, y, target_x, -target_y) < config.prohibited_area_radius):
-        #     print("NEAR")
-        #     if(interaction >= config.interaction_threshold):
-        #         time.sleep(0.001)
-        #     else:
-        #         time.sleep(0.05)
+        if(get_distance(x, y, target_x, -target_y) < config.prohibited_area_radius):
+            print("NEAR")
+            if(interaction >= config.interaction_threshold):
+                
+                time.sleep(0.001)
+            else:
+                time.sleep(0.05)
 
-        if(interaction < 0):
-            time.sleep(0.01/(-interaction))
-        elif(interaction < 2):
-            time.sleep(0.01)
-        else:
-            time.sleep(5)
+        # Interaction の 0/1スイッチのみでの制御 for DEMO
+        # if(interaction < 0):
+        #     time.sleep(0.01/(-interaction))
+        # elif(interaction < 2):
+        #     time.sleep(0.01)
+        # else:
+        #     time.sleep(5)
 
         index += 1
         if(index >= config.sample_num): index = 0
@@ -172,6 +166,7 @@ if __name__ == "__main__":
     signal.signal(signal.SIGINT, handler)
 
     # パーリンノイズの生成
+    # この時点で動きの経路は確定
     x_list,y_list = generate_perlin_noise()
 
     # ReceiverのThreadを別Threadで実行
