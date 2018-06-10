@@ -7,12 +7,15 @@ import signal
 import sys
 
 # モジュール変数の定義
-import config
+import test_config
 
 # OSC送信のため
 import argparse
 from pythonosc import osc_message_builder
 from pythonosc import udp_client
+
+# TestデータのCSVロードのため
+import pandas as pd
 
 # Ctrl+Cで終了時の処理
 def handler(signal, frame):
@@ -22,27 +25,32 @@ def handler(signal, frame):
 # OSCのSender初期化
 def init_osc_sender():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--sender_ip", default=config.sender_ip, help="The ip of th OSC Sender")
-    parser.add_argument("--sender_port", type=int, default=config.sender_port, help="The port the OSC sender is listening on")
+    parser.add_argument("--kinect_sender_ip", default=test_config.kinect_sender_ip, help="The ip of th OSC Sender")
+    parser.add_argument("--kinect_sender_port", type=int, default=test_config.kinect_sender_port, help="The port the OSC sender is listening on")
     args = parser.parse_args()
-    osc_client = udp_client.UDPClient(args.sender_ip, args.sender_port)
+    osc_client = udp_client.UDPClient(args.kinect_sender_port, args.kinect_sender_port)
 
     # 設定のログ出し
-    print("[Sender] sender_ip:{}, sender_port:{}, address:/data".format(args.sender_ip, args.sender_port))
+    print("[Sender] sender_ip:{}, sender_port:{}, address:/data".format(args.kinect_sender_ip, args.kinect_sender_port))
     return osc_client
 
 # Parameterの取得とmsgに突っ込む
-def get_param(msg,arg):
-    print("type {}:".format(arg))
-    input_arg = input()
-    msg.add_arg(int(input_arg))
-    return input_arg
+# def append_param(msg,arg):
+#     print("type {}:".format(arg))
+#     input_arg = input()
+#     msg.add_arg(int(input_arg))
+#     return input_arg
 
-def task(osc_client):
+def task(osc_client, index):
   msg = osc_message_builder.OscMessageBuilder(address="/data")
-  get_param(msg,"nearest_x")
-  get_param(msg,"nearest_depth")
-  get_param(msg,"num_of_people")
+  # _x = df['x'][index].astype("int")
+  # _y = df['y'][index].astype("int")
+  _x = int(df['x'][index].astype("int"))
+  _y = int(df['y'][index].astype("int"))
+  
+  msg.add_arg(int(_x)) # nearest_x
+  msg.add_arg(int(_y)) # nearest_depth
+  msg.add_arg(int(0)) # num_of_people
   msg = msg.build()
   osc_client.send(msg)
 
@@ -54,6 +62,16 @@ if __name__ == "__main__":
   # OSC周りの初期化
   osc_client_sender = init_osc_sender()
 
+  # テストデータのロード
+  df = pd.read_csv('test_kinect.csv')
+  print(df)
+  print(df.columns)
+  index = 0
   while True:
-    task(osc_client_sender)
+
+    task(osc_client_sender, index)
     time.sleep(2)
+    index += 1
+
+    if index >= len(df):
+        index = 0
