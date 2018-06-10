@@ -168,7 +168,7 @@ def main_thread():
             # 送る座標も固定
             x, y = f_x, f_y
             # Swithのためのkeyみたいなboolean変数を一個用意
-            # しばらく更新しないことでここに行って止まる気がする
+            # しばらく更新しないことで、ここにroombaが行って時間余ったら止まる気がする
             time.sleep(10)
         else:
             # 普段の時、Interactionは検知しているが、ある程度遠い時
