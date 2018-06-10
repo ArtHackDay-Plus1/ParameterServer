@@ -112,10 +112,10 @@ def get_distance(x1, y1, x2, y2):
 #検知したInteractionの0~2700の位置をもとに、ルンバの逃げる位置を決定
 def get_farthest_xy(target_x):
     if target_x < 1350:
-        f_x = 0 + frame_margin
+        f_x = 0 + config.frame_margin
     else:
-        f_x = 2700 - frame_margin
-    f_y = 0 + frame_margin # 一番壁側
+        f_x = 2700 - config.frame_margin
+    f_y = 0 + config.frame_margin # 一番壁側
     return f_x,f_y
 
 # 任意の点(x,y)最近傍の 生成済み経路の点のindexを取得

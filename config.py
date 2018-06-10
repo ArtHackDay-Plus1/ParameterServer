@@ -1,6 +1,7 @@
+#############################################################
+
 receiver_port = 8015
 receiver_ip = "127.0.0.1"
-
 
 # "192.168.2.11"  cannot used
 
@@ -21,6 +22,18 @@ pd_sender_port = 8012
 # roomba
 roomba_sender_ip = "192.168.2.13"
 roomba_sender_port = 8013
+
+#########################[TEST]###############################
+
+# test kinect
+kinect_sender_port = 8015
+kinect_sender_ip="127.0.0.1"
+
+# test roomba
+roomba_receiver_port = 8014
+roomba_receiver_ip="127.0.0.1"
+
+#############################################################
 
 # 多いほど複雑な動きが生成
 pattern_num = 25
