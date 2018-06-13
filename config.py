@@ -1,37 +1,30 @@
+# const int sender_osc_port_num = 8016;
+# const int receiver_osc_port_num = 8020;
+# const std::string osc_sender_ip = "127.0.0.1";
+
 #############################################################
 
-receiver_port = 8015
-receiver_ip = "127.0.0.1"
+# [Reciver] Kinect
+kinect_receiver_ip = "127.0.0.1"
+kinect_receiver_port = 8017
 
-# "192.168.2.11"  cannot used
-
-# Parameter Server
-# macmini_sender_ip = "192.168.2.15"
-macmini_sender_ip = "127.0.0.1" # for dummy
-macmini_sender_port = 8015
-
-# projector + Kinect
-macmini_sender_ip = "127.0.0.1"
-# macmini_sender_ip = "192.168.2.17"
-macmini_sender_port = 8017
-
-# PureData
+# [Sender] PureData
 pd_sender_ip = "192.168.2.12"
 pd_sender_port = 8012
 
-# roomba
+# [Sender] roomba
 roomba_sender_ip = "192.168.2.13"
 roomba_sender_port = 8013
 
 #########################[TEST]###############################
 
-# test kinect
-kinect_sender_port = 8015
-kinect_sender_ip="127.0.0.1"
-
 # test roomba
-roomba_receiver_port = 8014
-roomba_receiver_ip="127.0.0.1"
+test_sender_port = 8020
+test_sender_ip="127.0.0.1"
+
+# test roomba / kinect
+test_receiver_port = 8016
+test_receiver_ip="127.0.0.1"
 
 #############################################################
 

@@ -36,17 +36,18 @@ def handler(signal, frame):
         sys.exit(0)
 
 # Receive時の処理 (data/ 以降に一つのデータの際(引数一つ)であればok)
-def print_handler(_data_path, nearest_x, nearest_depth, num_of_people):
+def kinect_receive_handler(_data_path, nearest_x, nearest_depth, num_of_people):
     print("receive : {0},{1},{2}".format(nearest_x, nearest_depth, num_of_people))
     received_data.nearest_x = nearest_x
     received_data.nearest_depth = nearest_depth
     received_data.num_of_people = num_of_people
 
-# OSCのReceiver初期化
+# OSCのReceiver初期化 (Kinectからのデータ取得)
 def receiver_thread():
-    init_osc_receiver()
+    # init_osc_receiver()
+    init_test_osc_receiver()
 
-# OSC Receiverの初期化
+# OSC Receiverの初期化 (Kinectからのデータ取得)
 def init_osc_receiver():
     parser = argparse.ArgumentParser()
     parser.add_argument("--receiver_ip",default=config.receiver_ip, help="The ip to listen on")
@@ -54,9 +55,23 @@ def init_osc_receiver():
     args = parser.parse_args()
 
     _dispatcher = dispatcher.Dispatcher()
-    _dispatcher.map("/data", print_handler)
+    _dispatcher.map("/data", kinect_receive_handler)
 
     server = osc_server.ThreadingOSCUDPServer((args.receiver_ip, args.receiver_port), _dispatcher)
+    print("[Receiver] Receiving on {}".format(server.server_address))
+
+    server.serve_forever()
+
+def init_test_osc_receiver():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--test_receiver_ip",default=config.test_receiver_ip, help="The ip to listen on")
+    parser.add_argument("--test_receiver_port",type=int, default=config.test_receiver_port, help="The port the OSC Receiver to listen on")
+    args = parser.parse_args()
+
+    _dispatcher = dispatcher.Dispatcher()
+    _dispatcher.map("/data", kinect_receive_handler)
+
+    server = osc_server.ThreadingOSCUDPServer((args.test_receiver_ip, args.test_receiver_port), _dispatcher)
     print("[Receiver] Receiving on {}".format(server.server_address))
 
     server.serve_forever()
@@ -110,12 +125,12 @@ def get_distance(x1, y1, x2, y2):
     return d
 
 #検知したInteractionの0~2700の位置をもとに、ルンバの逃げる位置を決定
-def get_farthest_xy(target_x):
-    if target_x < 1350:
-        f_x = 0 + config.frame_margin
+def get_farthest_xy(target_y):
+    if target_y < config.frame_y_max/2 :
+        f_y = config.frame_y_max - config.frame_margin
     else:
-        f_x = 2700 - config.frame_margin
-    f_y = 0 + config.frame_margin # 一番壁側
+        f_y = 0 + config.frame_margin
+    f_x = 0 + config.frame_margin # 一番壁側
     return f_x,f_y
 
 # 任意の点(x,y)最近傍の 生成済み経路の点のindexを取得
@@ -130,10 +145,14 @@ def calculate_nearest_index(x, y):
 
 def main_thread():
 
-    # OSC周りの初期化
-    macmini_osc_client_sender = init_osc_sender(config.macmini_sender_ip,config.macmini_sender_port)
-    pd_osc_client_sender = init_osc_sender(config.pd_sender_ip,config.pd_sender_port)
-    roomba_osc_client_sender = init_osc_sender(config.roomba_sender_ip,config.roomba_sender_port)
+    # TEST用　OSC周りの初期化 (PureDataを扱うマシンへ Send)
+    test_sender = init_osc_sender(config.test_sender_ip,config.test_sender_port)
+
+    # # OSC周りの初期化 (PureDataを扱うマシンへ Send)
+    # pd_osc_client_sender = init_osc_sender(config.pd_sender_ip,config.pd_sender_port)
+    #
+    # # OSC周りの初期化 (Roombaを扱うマシンへ Send)
+    # roomba_osc_client_sender = init_osc_sender(config.roomba_sender_ip,config.roomba_sender_port)
 
     # 更新パラメータ
     index = 0
@@ -148,22 +167,22 @@ def main_thread():
         interaction = received_data.num_of_people
 
         # 一番展示に近い人のy方向の値をmapで取得
-        target_x = received_data.nearest_x
+        target_y = received_data.nearest_x
 
         # 一番展示に近い人の展示までの距離をmapで取得
-        target_y = received_data.nearest_depth
+        target_x = received_data.nearest_depth + config.frame_x_max
 
         # この時Interactionの検知なし(誰も見てないだろうから更新もほぼしない)
         if(target_x<0 or target_y<0):
             # 普段の時、Interactionは検知しているが、ある程度遠い時
-            time.sleep(5)
+            time.sleep(0.05)
 
         # Interaction検知してる時、roombaと人がある程度近いと逃げる
         elif(get_distance(x, y, target_x, target_y) < config.prohibited_area_radius):
             print("NEAR")
             # 以降しばらくは特定の位置情報だけ送ってそこに向かうようにさせる
             # -> そのためにIndex値を固定 その特定座標と近いIndexを求める
-            f_x, f_y = get_farthest_xy(target_x)
+            f_x, f_y = get_farthest_xy(target_y)
             index = calculate_nearest_index(f_x, f_y)
             # 送る座標も固定
             x, y = f_x, f_y
@@ -174,17 +193,9 @@ def main_thread():
             # 普段の時、Interactionは検知しているが、ある程度遠い時
             time.sleep(0.05)
 
-        broadcast_parameter(macmini_osc_client_sender, x, y, z, interaction)
-        broadcast_parameter(pd_osc_client_sender, x, y, z, interaction)
-        broadcast_parameter(roomba_osc_client_sender, x, y, z, interaction)
-
-        # Interaction の 0/1スイッチのみでの制御 for DEMO
-        # if(interaction < 0):
-        #     time.sleep(0.01/(-interaction))
-        # elif(interaction < 2):
-        #     time.sleep(0.01)
-        # else:
-        #     time.sleep(5)
+        broadcast_parameter(test_sender, x, y, z, interaction)
+        # broadcast_parameter(pd_osc_client_sender, x, y, z, interaction)
+        # broadcast_parameter(roomba_osc_client_sender, x, y, z, interaction)
 
         index += 1
         if(index >= config.sample_num): index = 0
