@@ -42,7 +42,7 @@ def kinect_receive_handler(_data_path, nearest_x, nearest_depth, num_of_people):
     received_data.nearest_depth = nearest_depth
     received_data.num_of_people = num_of_people
 
-# OSCのReceiver初期化 (Kinectからのデータ取得)
+# OSCのReceiver初期化
 def receiver_thread():
     # 実際のKinect用
     init_osc_receiver()
