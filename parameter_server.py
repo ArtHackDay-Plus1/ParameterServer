@@ -160,8 +160,9 @@ def main_thread():
     while True:
         x = x_list[index]
         y = y_list[index]
+
         # zに何かしらインタラクション入れたい
-        z = randint(0,config.z_max)
+        z = math.sin(config.z_speed*2*math.pi*index/config.sample_num)*config.z_max/2+config.z_max/2
 
         # 人が多い場合はinteraction度合いをあげる
         interaction = received_data.num_of_people
@@ -179,7 +180,7 @@ def main_thread():
             broadcast_parameter(test_sender, x, y, z, interaction)
             # broadcast_parameter(pd_osc_client_sender, x, y, z, interaction)
             # broadcast_parameter(roomba_osc_client_sender, x, y, z, interaction)
-            
+
             time.sleep(0.05)
 
         # Interaction検知してる時、roombaと人がある程度近いと逃げる
@@ -191,14 +192,23 @@ def main_thread():
             index = calculate_nearest_index(f_x, f_y)
             # 送る座標も固定
             x, y = f_x, f_y
+            z = 0
 
             broadcast_parameter(test_sender, x, y, z, interaction)
             # broadcast_parameter(pd_osc_client_sender, x, y, z, interaction)
             # broadcast_parameter(roomba_osc_client_sender, x, y, z, interaction)
+            time.sleep(5)
+
+            broadcast_parameter(test_sender, x, y, z, interaction)
+            z = 127
+
+            time.sleep(3)
+            broadcast_parameter(test_sender, x, y, z, interaction)
+            z = 0
 
             # Swithのためのkeyみたいなboolean変数を一個用意
             # しばらく更新しないことで、ここにroombaが行って時間余ったら止まる気がする
-            time.sleep(10)
+            time.sleep(1)
         else:
             # 普段の時、Interactionは検知しているが、ある程度遠い時
 

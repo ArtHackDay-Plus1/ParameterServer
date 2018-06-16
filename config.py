@@ -47,5 +47,8 @@ y_max_scale = frame_y_max - frame_margin*2
 prohibited_area_radius = 1000
 interaction_threshold = 1
 
-# 磁石動かすサーボモーターの高さの最大値
-z_max = 250
+# 磁石動かすサーボモーターの低さの最大値
+z_max = 255
+
+# 磁石動かすサーボモーターの通常の速さ (大きくすると早く動く)
+z_speed = 10
