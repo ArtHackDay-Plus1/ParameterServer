@@ -13,7 +13,7 @@ pd_sender_ip = "192.168.2.12"
 pd_sender_port = 8012
 
 # [Sender] roomba
-roomba_sender_ip = "192.168.2.13"
+roomba_sender_ip = "127.0.0.1"
 roomba_sender_port = 8013
 
 #########################[TEST]###############################
@@ -44,7 +44,7 @@ x_max_scale = frame_x_max - frame_margin*2
 y_max_scale = frame_y_max - frame_margin*2
 
 # カニが逃げる半径
-prohibited_area_radius = 1000
+prohibited_area_radius = 1500
 interaction_threshold = 1
 
 # 磁石動かすサーボモーターの低さの最大値

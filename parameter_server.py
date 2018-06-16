@@ -175,9 +175,9 @@ def main_thread():
         if(target_x<0 or target_y<0):
             # 普段の時、Interactionは検知しているが、ある程度遠い時
 
-            broadcast_parameter(test_sender, x, y, z, interaction)
-            # broadcast_parameter(pd_osc_client_sender, x, y, z, interaction)
-            # broadcast_parameter(roomba_osc_client_sender, x, y, z, interaction)
+            # broadcast_parameter(test_sender, x, y, z, interaction)
+            broadcast_parameter(pd_osc_client_sender, x, y, z, interaction)
+            broadcast_parameter(roomba_osc_client_sender, x, y, z, interaction)
 
             time.sleep(0.05)
 
@@ -192,16 +192,18 @@ def main_thread():
             x, y = f_x, f_y
             z = 0
 
-            broadcast_parameter(test_sender, x, y, z, interaction)
-            # broadcast_parameter(pd_osc_client_sender, x, y, z, interaction)
-            # broadcast_parameter(roomba_osc_client_sender, x, y, z, interaction)
+            # broadcast_parameter(test_sender, x, y, z, interaction)
+            broadcast_parameter(pd_osc_client_sender, x, y, z, interaction)
+            broadcast_parameter(roomba_osc_client_sender, x, y, z, interaction)
             time.sleep(5)
 
-            broadcast_parameter(test_sender, x, y, z, interaction)
+            broadcast_parameter(pd_osc_client_sender, x, y, z, interaction)
+            broadcast_parameter(roomba_osc_client_sender, x, y, z, interaction)
             z = 127
 
             time.sleep(3)
-            broadcast_parameter(test_sender, x, y, z, interaction)
+            broadcast_parameter(pd_osc_client_sender, x, y, z, interaction)
+            broadcast_parameter(roomba_osc_client_sender, x, y, z, interaction)
             z = 0
 
             # Swithのためのkeyみたいなboolean変数を一個用意
@@ -210,9 +212,9 @@ def main_thread():
         else:
             # 普段の時、Interactionは検知しているが、ある程度遠い時
 
-            broadcast_parameter(test_sender, x, y, z, interaction)
-            # broadcast_parameter(pd_osc_client_sender, x, y, z, interaction)
-            # broadcast_parameter(roomba_osc_client_sender, x, y, z, interaction)
+            # broadcast_parameter(test_sender, x, y, z, interaction)
+            broadcast_parameter(pd_osc_client_sender, x, y, z, interaction)
+            broadcast_parameter(roomba_osc_client_sender, x, y, z, interaction)
             time.sleep(0.05)
 
         index += 1
