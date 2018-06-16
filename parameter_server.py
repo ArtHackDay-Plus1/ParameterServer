@@ -175,6 +175,11 @@ def main_thread():
         # この時Interactionの検知なし(誰も見てないだろうから更新もほぼしない)
         if(target_x<0 or target_y<0):
             # 普段の時、Interactionは検知しているが、ある程度遠い時
+
+            broadcast_parameter(test_sender, x, y, z, interaction)
+            # broadcast_parameter(pd_osc_client_sender, x, y, z, interaction)
+            # broadcast_parameter(roomba_osc_client_sender, x, y, z, interaction)
+            
             time.sleep(0.05)
 
         # Interaction検知してる時、roombaと人がある程度近いと逃げる
@@ -186,16 +191,21 @@ def main_thread():
             index = calculate_nearest_index(f_x, f_y)
             # 送る座標も固定
             x, y = f_x, f_y
+
+            broadcast_parameter(test_sender, x, y, z, interaction)
+            # broadcast_parameter(pd_osc_client_sender, x, y, z, interaction)
+            # broadcast_parameter(roomba_osc_client_sender, x, y, z, interaction)
+
             # Swithのためのkeyみたいなboolean変数を一個用意
             # しばらく更新しないことで、ここにroombaが行って時間余ったら止まる気がする
             time.sleep(10)
         else:
             # 普段の時、Interactionは検知しているが、ある程度遠い時
-            time.sleep(0.05)
 
-        broadcast_parameter(test_sender, x, y, z, interaction)
-        # broadcast_parameter(pd_osc_client_sender, x, y, z, interaction)
-        # broadcast_parameter(roomba_osc_client_sender, x, y, z, interaction)
+            broadcast_parameter(test_sender, x, y, z, interaction)
+            # broadcast_parameter(pd_osc_client_sender, x, y, z, interaction)
+            # broadcast_parameter(roomba_osc_client_sender, x, y, z, interaction)
+            time.sleep(0.05)
 
         index += 1
         if(index >= config.sample_num): index = 0
