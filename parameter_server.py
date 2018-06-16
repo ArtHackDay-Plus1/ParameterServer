@@ -45,10 +45,10 @@ def kinect_receive_handler(_data_path, nearest_x, nearest_depth, num_of_people):
 # OSCのReceiver初期化 (Kinectからのデータ取得)
 def receiver_thread():
     # 実際のKinect用
-    # init_osc_receiver()
+    init_osc_receiver()
 
     # テスト用
-    init_test_osc_receiver()
+    # init_test_osc_receiver()
 
 # OSC Receiverの初期化 (Kinectからのデータ取得)
 def init_osc_receiver():
@@ -95,11 +95,6 @@ def generate_perlin_noise():
     y_list = [(1+noise.pnoise1(arg*i,octaves=1,persistence=0.5,base=1))/2*config.y_max_scale+config.frame_margin for i in range(config.sample_num)]
 
     return x_list,y_list;
-
-# Parameterの取得とmsgに突っ込む
-# def get_param(msg,arg):
-#     input_arg = randint(0,100)
-#     msg.add_arg(int(input_arg))
 
 def broadcast_parameter(osc_client, x, y, z, interaction):
     try:
@@ -148,14 +143,14 @@ def calculate_nearest_index(x, y):
 
 def main_thread():
 
-    # TEST用　OSC周りの初期化 (PureDataを扱うマシンへ Send)
-    test_sender = init_osc_sender(config.test_sender_ip,config.test_sender_port)
+    # TEST用　OSC周りの初期化
+    # test_sender = init_osc_sender(config.test_sender_ip,config.test_sender_port)
 
-    # # OSC周りの初期化 (PureDataを扱うマシンへ Send)
-    # pd_osc_client_sender = init_osc_sender(config.pd_sender_ip,config.pd_sender_port)
-    #
-    # # OSC周りの初期化 (Roombaを扱うマシンへ Send)
-    # roomba_osc_client_sender = init_osc_sender(config.roomba_sender_ip,config.roomba_sender_port)
+    # OSC周りの初期化 (PureDataを扱うマシンへ Send)
+    pd_osc_client_sender = init_osc_sender(config.pd_sender_ip,config.pd_sender_port)
+
+    # OSC周りの初期化 (Roombaを扱うマシンへ Send)
+    roomba_osc_client_sender = init_osc_sender(config.roomba_sender_ip,config.roomba_sender_port)
 
     # 更新パラメータ
     index = 0
