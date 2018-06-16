@@ -44,20 +44,23 @@ def kinect_receive_handler(_data_path, nearest_x, nearest_depth, num_of_people):
 
 # OSCのReceiver初期化 (Kinectからのデータ取得)
 def receiver_thread():
+    # 実際のKinect用
     # init_osc_receiver()
+
+    # テスト用
     init_test_osc_receiver()
 
 # OSC Receiverの初期化 (Kinectからのデータ取得)
 def init_osc_receiver():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--receiver_ip",default=config.receiver_ip, help="The ip to listen on")
-    parser.add_argument("--receiver_port",type=int, default=config.receiver_port, help="The port the OSC Receiver to listen on")
+    parser.add_argument("--kinect_receiver_ip",default=config.kinect_receiver_ip, help="The ip to listen on")
+    parser.add_argument("--kinect_receiver_port",type=int, default=config.kinect_receiver_port, help="The port the OSC Receiver to listen on")
     args = parser.parse_args()
 
     _dispatcher = dispatcher.Dispatcher()
     _dispatcher.map("/data", kinect_receive_handler)
 
-    server = osc_server.ThreadingOSCUDPServer((args.receiver_ip, args.receiver_port), _dispatcher)
+    server = osc_server.ThreadingOSCUDPServer((args.kinect_receiver_ip, args.kinect_receiver_port), _dispatcher)
     print("[Receiver] Receiving on {}".format(server.server_address))
 
     server.serve_forever()
