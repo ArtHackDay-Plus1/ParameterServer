@@ -9,8 +9,8 @@ kinect_receiver_ip = "127.0.0.1"
 kinect_receiver_port = 8017
 
 # [Sender] PureData
-pd_sender_ip = "192.168.2.12"
-pd_sender_port = 8012
+# pd_sender_ip = "192.168.2.12"
+# pd_sender_port = 8012
 
 # [Sender] roomba
 roomba_sender_ip = "127.0.0.1"

@@ -147,7 +147,7 @@ def main_thread():
     # test_sender = init_osc_sender(config.test_sender_ip,config.test_sender_port)
 
     # OSC周りの初期化 (PureDataを扱うマシンへ Send)
-    pd_osc_client_sender = init_osc_sender(config.pd_sender_ip,config.pd_sender_port)
+    # pd_osc_client_sender = init_osc_sender(config.pd_sender_ip,config.pd_sender_port)
 
     # OSC周りの初期化 (Roombaを扱うマシンへ Send)
     roomba_osc_client_sender = init_osc_sender(config.roomba_sender_ip,config.roomba_sender_port)
@@ -176,7 +176,7 @@ def main_thread():
             # 普段の時、Interactionは検知しているが、ある程度遠い時
 
             # broadcast_parameter(test_sender, x, y, z, interaction)
-            broadcast_parameter(pd_osc_client_sender, x, y, z, interaction)
+            # broadcast_parameter(pd_osc_client_sender, x, y, z, interaction)
             broadcast_parameter(roomba_osc_client_sender, x, y, z, interaction)
 
             time.sleep(0.05)
@@ -193,16 +193,16 @@ def main_thread():
             z = 0
 
             # broadcast_parameter(test_sender, x, y, z, interaction)
-            broadcast_parameter(pd_osc_client_sender, x, y, z, interaction)
+            # broadcast_parameter(pd_osc_client_sender, x, y, z, interaction)
             broadcast_parameter(roomba_osc_client_sender, x, y, z, interaction)
             time.sleep(5)
 
-            broadcast_parameter(pd_osc_client_sender, x, y, z, interaction)
+            # broadcast_parameter(pd_osc_client_sender, x, y, z, interaction)
             broadcast_parameter(roomba_osc_client_sender, x, y, z, interaction)
             z = 127
 
             time.sleep(3)
-            broadcast_parameter(pd_osc_client_sender, x, y, z, interaction)
+            # broadcast_parameter(pd_osc_client_sender, x, y, z, interaction)
             broadcast_parameter(roomba_osc_client_sender, x, y, z, interaction)
             z = 0
 
@@ -213,7 +213,7 @@ def main_thread():
             # 普段の時、Interactionは検知しているが、ある程度遠い時
 
             # broadcast_parameter(test_sender, x, y, z, interaction)
-            broadcast_parameter(pd_osc_client_sender, x, y, z, interaction)
+            # broadcast_parameter(pd_osc_client_sender, x, y, z, interaction)
             broadcast_parameter(roomba_osc_client_sender, x, y, z, interaction)
             time.sleep(0.05)
 
