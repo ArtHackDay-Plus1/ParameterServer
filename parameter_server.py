@@ -128,8 +128,7 @@ def get_farthest_xy(target_y):
         f_y = config.frame_y_max - config.frame_margin
     else:
         f_y = 0 + config.frame_margin
-    f_x = 0 + config.frame_margin # 一番壁側
-    return f_x,f_y
+    return f_y
 
 # 任意の点(x,y)最近傍の 生成済み経路の点のindexを取得
 def calculate_nearest_index(x, y):
@@ -197,7 +196,8 @@ def main_thread():
             print("NEAR")
             # 以降しばらくは特定の位置情報だけ送ってそこに向かうようにさせる
             # -> そのためにIndex値を固定 その特定座標と近いIndexを求める
-            f_x, f_y = get_farthest_xy(target_y)
+            f_y = get_farthest_y(target_y)
+            f_x = 0 + config.frame_margin
             index = calculate_nearest_index(f_x, f_y)
             # 送る座標も固定
             x, y = f_x, f_y

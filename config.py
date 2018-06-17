@@ -38,7 +38,7 @@ sample_num = 20000
 frame_x_max = 1200
 frame_y_max = 2700
 
-frame_margin = 300
+frame_margin = 450
 
 x_max_scale = frame_x_max - frame_margin*2
 y_max_scale = frame_y_max - frame_margin*2
