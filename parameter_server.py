@@ -45,10 +45,10 @@ def kinect_receive_handler(_data_path, nearest_x, nearest_depth, is_people_move)
 # OSCのReceiver初期化
 def receiver_thread():
     # 実際のKinect用
-    # init_osc_receiver()
+    init_osc_receiver()
 
     # テスト用
-    init_test_osc_receiver()
+    # init_test_osc_receiver()
 
 # OSC Receiverの初期化 (Kinectからのデータ取得)
 def init_osc_receiver():
@@ -203,19 +203,19 @@ def main_thread():
             x, y = f_x, f_y
             z = 0
 
-            broadcast_parameter(test_sender, x, y, z, is_people_move)
+            # broadcast_parameter(test_sender, x, y, z, is_people_move)
             # broadcast_parameter(pd_osc_client_sender, x, y, z, is_people_move)
             broadcast_parameter(roomba_osc_client_sender, x, y, z, is_people_move)
             time.sleep(5)
 
-            broadcast_parameter(test_sender, x, y, z, is_people_move)
+            # broadcast_parameter(test_sender, x, y, z, is_people_move)
             # broadcast_parameter(pd_osc_client_sender, x, y, z, is_people_move)
             broadcast_parameter(roomba_osc_client_sender, x, y, z, is_people_move)
             z = 127
 
             time.sleep(3)
 
-            broadcast_parameter(test_sender, x, y, z, is_people_move)
+            # broadcast_parameter(test_sender, x, y, z, is_people_move)
             # broadcast_parameter(pd_osc_client_sender, x, y, z, is_people_move)
             broadcast_parameter(roomba_osc_client_sender, x, y, z, is_people_move)
             z = 0
@@ -227,7 +227,7 @@ def main_thread():
         else:
             # 普段の時、is_people_moveは検知しているが、ある程度遠い時
 
-            broadcast_parameter(test_sender, x, y, z, is_people_move)
+            # broadcast_parameter(test_sender, x, y, z, is_people_move)
             # broadcast_parameter(pd_osc_client_sender, x, y, z, is_people_move)
             broadcast_parameter(roomba_osc_client_sender, x, y, z, is_people_move)
             time.sleep(0.05)
