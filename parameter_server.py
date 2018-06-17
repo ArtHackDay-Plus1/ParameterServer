@@ -110,7 +110,7 @@ def broadcast_parameter(osc_client, x, y, z, is_people_move):
         msg.add_arg(int(z))
         msg.add_arg(int(is_people_move))
 
-        print("send message: x[{0}],y[{1}],z[{2}],interaction[{3}]".format(x,y,z,interaction))
+        print("send message: x[{0}],y[{1}],z[{2}],is_people_move[{3}]".format(x,y,z,is_people_move))
 
         msg = msg.build()
         osc_client.send(msg)
@@ -122,7 +122,7 @@ def get_distance(x1, y1, x2, y2):
     d = math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
     return d
 
-#検知したInteractionの0~2700の位置をもとに、ルンバの逃げる位置を決定
+#検知したis_people_moveの0~2700の位置をもとに、ルンバの逃げる位置を決定
 def get_farthest_xy(target_y):
     if target_y < config.frame_y_max/2 :
         f_y = config.frame_y_max - config.frame_margin
@@ -162,8 +162,8 @@ def main_thread():
         # zに何かしらインタラクション入れたい
         z = math.sin(config.z_speed*2*math.pi*index/config.sample_num)*config.z_max/2+config.z_max/2
 
-        # 人が多い場合はinteraction度合いをあげる
-        interaction = received_data.is_people_move
+        # 人が多い場合はis_people_move度合いをあげる
+        is_people_move = received_data.is_people_move
 
         # 一番展示に近い人のy方向の値をmapで取得
         target_y = received_data.nearest_x
@@ -171,17 +171,17 @@ def main_thread():
         # 一番展示に近い人の展示までの距離をmapで取得
         target_x = received_data.nearest_depth + config.frame_x_max
 
-        # この時Interactionの検知なし(誰も見てないだろうから更新もほぼしない)
+        # この時is_people_moveの検知なし(誰も見てないだろうから更新もほぼしない)
         if(target_x<0 or target_y<0):
-            # 普段の時、Interactionは検知しているが、ある程度遠い時
+            # 普段の時、is_people_moveは検知しているが、ある程度遠い時
 
-            # broadcast_parameter(test_sender, x, y, z, interaction)
-            # broadcast_parameter(pd_osc_client_sender, x, y, z, interaction)
-            broadcast_parameter(roomba_osc_client_sender, x, y, z, interaction)
+            # broadcast_parameter(test_sender, x, y, z, is_people_move)
+            # broadcast_parameter(pd_osc_client_sender, x, y, z, is_people_move)
+            broadcast_parameter(roomba_osc_client_sender, x, y, z, is_people_move)
 
             time.sleep(0.05)
 
-        # Interaction検知してる時、roombaと人がある程度近いと逃げる
+        # is_people_move検知してる時、roombaと人がある程度近いと逃げる
         elif(get_distance(x, y, target_x, target_y) < config.prohibited_area_radius):
             print("NEAR")
             # 以降しばらくは特定の位置情報だけ送ってそこに向かうようにさせる
@@ -192,29 +192,29 @@ def main_thread():
             x, y = f_x, f_y
             z = 0
 
-            # broadcast_parameter(test_sender, x, y, z, interaction)
-            # broadcast_parameter(pd_osc_client_sender, x, y, z, interaction)
-            broadcast_parameter(roomba_osc_client_sender, x, y, z, interaction)
+            # broadcast_parameter(test_sender, x, y, z, is_people_move)
+            # broadcast_parameter(pd_osc_client_sender, x, y, z, is_people_move)
+            broadcast_parameter(roomba_osc_client_sender, x, y, z, is_people_move)
             time.sleep(5)
 
-            # broadcast_parameter(pd_osc_client_sender, x, y, z, interaction)
-            broadcast_parameter(roomba_osc_client_sender, x, y, z, interaction)
+            # broadcast_parameter(pd_osc_client_sender, x, y, z, is_people_move)
+            broadcast_parameter(roomba_osc_client_sender, x, y, z, is_people_move)
             z = 127
 
             time.sleep(3)
-            # broadcast_parameter(pd_osc_client_sender, x, y, z, interaction)
-            broadcast_parameter(roomba_osc_client_sender, x, y, z, interaction)
+            # broadcast_parameter(pd_osc_client_sender, x, y, z, is_people_move)
+            broadcast_parameter(roomba_osc_client_sender, x, y, z, is_people_move)
             z = 0
 
             # Swithのためのkeyみたいなboolean変数を一個用意
             # しばらく更新しないことで、ここにroombaが行って時間余ったら止まる気がする
             time.sleep(1)
         else:
-            # 普段の時、Interactionは検知しているが、ある程度遠い時
+            # 普段の時、is_people_moveは検知しているが、ある程度遠い時
 
-            # broadcast_parameter(test_sender, x, y, z, interaction)
-            # broadcast_parameter(pd_osc_client_sender, x, y, z, interaction)
-            broadcast_parameter(roomba_osc_client_sender, x, y, z, interaction)
+            # broadcast_parameter(test_sender, x, y, z, is_people_move)
+            # broadcast_parameter(pd_osc_client_sender, x, y, z, is_people_move)
+            broadcast_parameter(roomba_osc_client_sender, x, y, z, is_people_move)
             time.sleep(0.05)
 
         index += 1
