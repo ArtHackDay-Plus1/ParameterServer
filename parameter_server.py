@@ -45,10 +45,10 @@ def kinect_receive_handler(_data_path, nearest_x, nearest_depth, is_people_move)
 # OSCのReceiver初期化
 def receiver_thread():
     # 実際のKinect用
-    init_osc_receiver()
+    # init_osc_receiver()
 
     # テスト用
-    # init_test_osc_receiver()
+    init_test_osc_receiver()
 
 # OSC Receiverの初期化 (Kinectからのデータ取得)
 def init_osc_receiver():
@@ -141,17 +141,20 @@ def calculate_nearest_index(x, y):
             nearest_index = i
     return nearest_index
 
+# 反応する半径をリセット
+def prohibited_area_radius_reset():
+    config.prohibited_area_radius = config.initial_prohibited_area_radius
 
 # 反応する半径を更新
 def prohibited_area_radius_update():
     config.prohibited_area_radius += config.prohibited_area_radius_acc
     if config.prohibited_area_radius > config.prohibited_area_radius:
-        config.prohibited_area_radius = config.initial_prohibited_area_radius
+        prohibited_area_radius_reset()
 
 def main_thread():
 
     # TEST用　OSC周りの初期化
-    # test_sender = init_osc_sender(config.test_sender_ip,config.test_sender_port)
+    test_sender = init_osc_sender(config.test_sender_ip,config.test_sender_port)
 
     # OSC周りの初期化 (PureDataを扱うマシンへ Send)
     # pd_osc_client_sender = init_osc_sender(config.pd_sender_ip,config.pd_sender_port)
@@ -182,7 +185,7 @@ def main_thread():
         if(target_x<0 or target_y<0):
             # 普段の時、is_people_moveは検知しているが、ある程度遠い時
 
-            # broadcast_parameter(test_sender, x, y, z, is_people_move)
+            broadcast_parameter(test_sender, x, y, z, is_people_move)
             # broadcast_parameter(pd_osc_client_sender, x, y, z, is_people_move)
             broadcast_parameter(roomba_osc_client_sender, x, y, z, is_people_move)
 
@@ -200,16 +203,19 @@ def main_thread():
             x, y = f_x, f_y
             z = 0
 
-            # broadcast_parameter(test_sender, x, y, z, is_people_move)
+            broadcast_parameter(test_sender, x, y, z, is_people_move)
             # broadcast_parameter(pd_osc_client_sender, x, y, z, is_people_move)
             broadcast_parameter(roomba_osc_client_sender, x, y, z, is_people_move)
             time.sleep(5)
 
+            broadcast_parameter(test_sender, x, y, z, is_people_move)
             # broadcast_parameter(pd_osc_client_sender, x, y, z, is_people_move)
             broadcast_parameter(roomba_osc_client_sender, x, y, z, is_people_move)
             z = 127
 
             time.sleep(3)
+
+            broadcast_parameter(test_sender, x, y, z, is_people_move)
             # broadcast_parameter(pd_osc_client_sender, x, y, z, is_people_move)
             broadcast_parameter(roomba_osc_client_sender, x, y, z, is_people_move)
             z = 0
@@ -217,10 +223,11 @@ def main_thread():
             # Swithのためのkeyみたいなboolean変数を一個用意
             # しばらく更新しないことで、ここにroombaが行って時間余ったら止まる気がする
             time.sleep(1)
+            prohibited_area_radius_reset()
         else:
             # 普段の時、is_people_moveは検知しているが、ある程度遠い時
 
-            # broadcast_parameter(test_sender, x, y, z, is_people_move)
+            broadcast_parameter(test_sender, x, y, z, is_people_move)
             # broadcast_parameter(pd_osc_client_sender, x, y, z, is_people_move)
             broadcast_parameter(roomba_osc_client_sender, x, y, z, is_people_move)
             time.sleep(0.05)
