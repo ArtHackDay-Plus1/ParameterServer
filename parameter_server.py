@@ -36,11 +36,11 @@ def handler(signal, frame):
         sys.exit(0)
 
 # Receive時の処理 (data/ 以降に一つのデータの際(引数一つ)であればok)
-def kinect_receive_handler(_data_path, nearest_x, nearest_depth, num_of_people):
-    print("receive : {0},{1},{2}".format(nearest_x, nearest_depth, num_of_people))
+def kinect_receive_handler(_data_path, nearest_x, nearest_depth, is_people_move):
+    print("receive : {0},{1},{2}".format(nearest_x, nearest_depth, is_people_move))
     received_data.nearest_x = nearest_x
     received_data.nearest_depth = nearest_depth
-    received_data.num_of_people = num_of_people
+    received_data.is_people_move = is_people_move
 
 # OSCのReceiver初期化
 def receiver_thread():
@@ -96,7 +96,7 @@ def generate_perlin_noise():
 
     return x_list,y_list;
 
-def broadcast_parameter(osc_client, x, y, z, interaction):
+def broadcast_parameter(osc_client, x, y, z, is_people_move):
     try:
         msg = osc_message_builder.OscMessageBuilder(address="/data")
 
@@ -108,7 +108,7 @@ def broadcast_parameter(osc_client, x, y, z, interaction):
         msg.add_arg(int(x))
         msg.add_arg(int(y))
         msg.add_arg(int(z))
-        msg.add_arg(int(interaction))
+        msg.add_arg(int(is_people_move))
 
         print("send message: x[{0}],y[{1}],z[{2}],interaction[{3}]".format(x,y,z,interaction))
 
@@ -163,7 +163,7 @@ def main_thread():
         z = math.sin(config.z_speed*2*math.pi*index/config.sample_num)*config.z_max/2+config.z_max/2
 
         # 人が多い場合はinteraction度合いをあげる
-        interaction = received_data.num_of_people
+        interaction = received_data.is_people_move
 
         # 一番展示に近い人のy方向の値をmapで取得
         target_y = received_data.nearest_x
