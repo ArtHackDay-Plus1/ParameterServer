@@ -44,8 +44,12 @@ x_max_scale = frame_x_max - frame_margin*2
 y_max_scale = frame_y_max - frame_margin*2
 
 # カニが逃げる半径
-prohibited_area_radius = 1500
-interaction_threshold = 1
+initial_prohibited_area_radius = 10 # 初期値
+prohibited_area_radius = 1000 # 可変な値
+prohibited_area_radius = 2500 # 上限
+prohibited_area_radius_acc = 10 # 更新の度合い(大きいほど早く更新)
+
+# interaction_threshold = 1
 
 # 磁石動かすサーボモーターの低さの最大値
 z_max = 255

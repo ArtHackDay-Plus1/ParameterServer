@@ -141,6 +141,13 @@ def calculate_nearest_index(x, y):
             nearest_index = i
     return nearest_index
 
+
+# 反応する半径を更新
+def prohibited_area_radius_update():
+    config.prohibited_area_radius += config.prohibited_area_radius_acc
+    if config.prohibited_area_radius > config.prohibited_area_radius:
+        config.prohibited_area_radius = config.initial_prohibited_area_radius
+
 def main_thread():
 
     # TEST用　OSC周りの初期化
@@ -180,6 +187,7 @@ def main_thread():
             broadcast_parameter(roomba_osc_client_sender, x, y, z, is_people_move)
 
             time.sleep(0.05)
+            prohibited_area_radius_update()
 
         # is_people_move検知してる時、roombaと人がある程度近いと逃げる
         elif(get_distance(x, y, target_x, target_y) < config.prohibited_area_radius):
@@ -216,6 +224,7 @@ def main_thread():
             # broadcast_parameter(pd_osc_client_sender, x, y, z, is_people_move)
             broadcast_parameter(roomba_osc_client_sender, x, y, z, is_people_move)
             time.sleep(0.05)
+            prohibited_area_radius_update()
 
         index += 1
         if(index >= config.sample_num): index = 0
