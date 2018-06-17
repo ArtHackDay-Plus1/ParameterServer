@@ -124,7 +124,7 @@ def get_distance(x1, y1, x2, y2):
 
 #検知したis_people_moveの0~2700の位置をもとに、ルンバの逃げる位置を決定
 def get_farthest_y(target_y):
-    if target_y < config.frame_y_max/2 :
+    if target_y > config.frame_y_max/2 :
         f_y = config.frame_y_max - config.frame_margin
     else:
         f_y = 0 + config.frame_margin
