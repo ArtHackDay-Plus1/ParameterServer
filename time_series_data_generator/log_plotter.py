@@ -5,5 +5,5 @@ import matplotlib.pyplot as plt
 df = pd.read_csv("data/perlin.csv")
 
 df.plot(x="x",y="y")
-plt.title("crab action log", size=12)
+plt.title("astral body time series position data", size=12)
 plt.show()
